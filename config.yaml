@@ -79,7 +79,7 @@ processors:
     - value: customer-1
       exporters: otlp/elastic/customer-1
     - value: customer-2
-      exporters: elasticsearch/customer-2
+      exporters: otlp/elastic/customer-2
     - value: customer-3
       exporters: datadog/customer-3
     - value: customer-4

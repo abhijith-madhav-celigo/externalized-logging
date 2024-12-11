@@ -167,6 +167,16 @@ Testing for fault-tolerance was as follows
 % ./otelcol-contrib --config ./config.yaml
 ```
 
+4. Logs can be produced to the kafka topic
+```
+ % node produce_logs_kafka.js customer-2
+ ```
+ 5. Logs can also be pushed via the OLTP listener configured for debug purposes
+
+ ```
+ % CUSTOMER=customer-2 produce_logs_otlp.sh
+ ```
+ 6. Customer-ids configured so far are customer-1, customer-2, customer-3. Any other customers used will result in logs being outputed on the collector terminal
 
 
 

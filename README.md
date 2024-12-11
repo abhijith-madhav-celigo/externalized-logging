@@ -4,6 +4,10 @@ The main purpose of the POC is to check on the routing and fault-tolerance featu
 
 Refer to this [Spike](https://docs.google.com/document/d/1xND_8py0--4EfZcyAhuQgTTps3hT18IAOrem7HlKM74/edit?usp=sharing) for more details
 
+In the scalability section of the Spike, there is mention of routing to multiple instances of collectors and the need for some external solutions for the same.
+
+But since we are going to be starting small(maybe a few 10's of customers), the focus of this POC is just the functioning and routing within a single collector instance. It is assumed that pipelines for new customers will be added manually via Terraform.
+
 ## Quick summary of the findings
 - The [routing](#routing) works as expected
   - Routing can be done based on customer id to different customer LMS's

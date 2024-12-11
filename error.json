@@ -1,0 +1,22 @@
+{
+    "occurredAt": "2024-10-28T10:21:01.749Z",
+    "source": "connection",
+    "code": "FTP_AUTH_FAILED",
+    "message": "[Could not connect to SFTP server at \"sftp://geethika.mallampalli@celigo.com:***@celigo.files.com/\".] [Could not connect to SFTP server at \"celigo.files.com\".] [Auth fail]",
+    "traceKey": "",
+    "exportDataURI": "",
+    "importDataURI": "",
+    "oIndex": 0,
+    "retryDataKey": "",
+    "errorId": 24882314808,
+    "legacyId": "",
+    "_flowJobId": "671f658917529217648f40af",
+    "classification": "",
+    "classifiedBy": "",
+    "retryAt": "",
+    "reqAndResKey": "",
+    "purgeAt": 1732702861749,
+    "tags": "",
+    "assignedTo": "",
+    "assignedBy": ""
+}

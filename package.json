@@ -1,0 +1,17 @@
+{
+  "name": "integrator_otelcol",
+  "version": "1.0.0",
+  "description": "",
+  "main": "produce_logs_kafka.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "json-templater": "^1.2.0",
+    "kafka": "^0.2.3",
+    "kafkajs": "^2.2.4"
+  }
+}

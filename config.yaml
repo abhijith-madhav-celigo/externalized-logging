@@ -1,0 +1,103 @@
+
+extensions:
+  health_check:
+  pprof:
+    endpoint: ${HOST}:1777
+  zpages:
+    endpoint: ${HOST}:55679
+  file_storage/error_logs:
+    directory: ${FILE_STORAGE_LOCATION}
+    create_directory: true
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: ${HOST}:4317
+      http:
+        endpoint: ${HOST}:4318
+
+  kafka:
+    protocol_version: 2.0.0
+    topic: ${LOG_TOPIC}
+    brokers: ${HOST}:9092 
+    group_id: otelcol-consumer-group
+    initial_offset: latest
+    encoding: json # otlp_json does not work with elastic
+    header_extraction: # need to extract from header and place it in resource attributes as otlp_json does not work with elastic
+      extract_headers: true
+      headers: ["customer-id"]
+#   did not work to prevent auto-commit only after the messages were pushed to datadog
+#    autocommit:
+#      enable: false
+#    message_marking:
+#      after: true
+
+exporters:
+  debug:
+    verbosity: detailed
+
+  otlp/elastic/customer-1:
+    endpoint: https://e995f78bcb10475582ea55466102266e.apm.us-central1.gcp.cloud.es.io:443
+    headers:
+      Authorization: "Bearer ${ELASTIC_TOKEN_CUSTOMER1}"
+    sending_queue:
+      storage: file_storage/error_logs
+  
+  otlp/elastic/customer-2:
+    endpoint: https://28391b4cf68142f589a79c72dc6d4811.apm.us-central1.gcp.cloud.es.io:443
+    headers:
+      Authorization: "Bearer ${ELASTIC_TOKEN_CUSTOMER2}"
+    sending_queue:
+      storage: file_storage/error_logs
+
+  datadog/customer-3:
+    api:
+      site: us5.datadoghq.com
+      key: ${DATADOG_TOKEN_CUSTOMER3}
+    sending_queue:
+      storage: file_storage/error_logs
+
+
+  otlphttp/splunk/customer-4:
+    logs_endpoint: https://ingest.jp0.signalfx.com/v2/log/otlp
+    headers:
+       X-SF-Token: ${SPLUNK_TOKEN_CUSTOMER4}
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 4000
+    spike_limit_mib: 800
+  batch:
+  routing:
+    from_attribute: kafka.header.customer-id
+    attribute_source: resource
+    default_exporters:
+    - debug
+    table:
+    - value: customer-1
+      exporters: otlp/elastic/customer-1
+    - value: customer-2
+      exporters: elasticsearch/customer-2
+    - value: customer-3
+      exporters: datadog/customer-3
+    - value: customer-4
+      exporters: otlphttp/splunk/customer-4
+service:
+  pipelines:
+    logs:
+      receivers:
+        - otlp
+        - kafka
+      processors: 
+#        - memory_limiter
+#        - batch
+        - routing
+      exporters: 
+        - otlp/elastic/customer-1
+        - otlp/elastic/customer-2
+        - datadog/customer-3
+        - otlphttp/splunk/customer-4
+        - debug
+  extensions: [health_check, pprof, zpages, file_storage/error_logs]
